@@ -26,27 +26,32 @@ def redimensionar(image, scale_percent):
 
 
 def invertir_colores(image):  
-    return cv2.bitwise_not(image) 
+    return cv2.bitwise_not(image)   
 
 
-# Título de la página
-st.title("Bienvenido a esta página para procesar imágenes.🖼️")
+# Título de la página  
+st.title("Bienvenido a esta página para procesar imágenes.🖼️")  
 
-# Breve descripción
-st.write("En esta página podrás escoger una imagen de tu galeria de fotos y modificarla a tu gusto con las opciones que tenemos preparadas para ti.")
+# Breve descripción  
+st.write("En esta página podrás escoger una imagen de tu galeria y modificarla"
+         " a tu gusto con las opciones que tenemos preparadas para ti😉.")  
 
-opcion = st.radio("¿Listo?", ("Nada", "Sí", "No"))
-if opcion == "Sí":
-    nombre = st.text_input("¿Cómo te llamas?")
-    if nombre:
-        st.write(f"¡Buenas {nombre}😉!, escoge la imagen que deseas modificar:")
+opcion = st.radio("¿Listo?", ("Nada", "Sí", "No"))  
+if opcion == "Sí":  
+    nombre = st.text_input("¿Cómo te llamas?")  
+    if nombre:  
+        st.write(f"¡Buenas {nombre}😉!, escoge la imagen que deseas modificar:")  
 
         # Subir imagen  
-        ima = st.file_uploader("Selecciona una imagen", type=["jpg", "jpeg", "png"])
+        ima = st.file_uploader("Selecciona una imagen", type=["jpg", "jpeg", "png"])  
 
         if ima is not None:  
             # Leer la imagen usando PIL  
             image = Image.open(ima)  
+
+            # Obtener el formato de la imagen  
+            formato = ima.type  
+            st.write(f"El formato de la imagen que has elegido es: {formato}")  
 
             # Convertir imagen a un formato que OpenCV puede procesar  
             image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)  
@@ -55,11 +60,11 @@ if opcion == "Sí":
             st.subheader("Imagen Cargada")  
             st.image(image, caption="Imagen Original", use_column_width=True)  
 
-            # Variable para guardar la imagen procesada
-            procesada = {}
+            # Variable para guardar la imagen procesada  
+            procesada = {}  
 
-            # Menú de operaciones
-            st.sidebar.subheader("Opciones de Procesamiento")  
+            # Menú de operaciones  
+            st.sidebar.subheader("Opciones de Procesamiento👌")  
             operaciones = ["Escala de Grises", "Detección de Bordes", "Rotar Imagen",   
                         "Redimensionar Imagen", "Invertir Colores", "Guardar Imagen"]  
             for operacion in operaciones:  
@@ -67,18 +72,18 @@ if opcion == "Sí":
                     if operacion == "Escala de Grises":  
                         procesada[operacion] = escala_grises(image_cv)  
                         st.subheader("Imagen en Escala de Grises")  
-                        st.image(procesada[operacion], caption="Imagen en Escala de Grises", channels="GRAY", use_column_width=True)
+                        st.image(procesada[operacion], caption="Imagen en Escala de Grises", channels="GRAY", use_column_width=True)  
 
                     elif operacion == "Detección de Bordes":  
                         procesada[operacion] = detectar_bordes(image_cv)  
                         st.subheader("Detección de Bordes")  
-                        st.image(procesada[operacion], caption="Bordes Detectados", channels="GRAY", use_column_width=True)
+                        st.image(procesada[operacion], caption="Bordes Detectados", channels="GRAY", use_column_width=True)  
 
                     elif operacion == "Rotar Imagen":  
                         angulo = st.sidebar.slider("Selecciona el ángulo de rotación", -180, 180, 0)  
                         procesada[operacion] = rotar(image_cv, angulo)  
                         st.subheader("Imagen Rotada")  
-                        st.image(procesada[operacion], caption=f"Imagen Rotada a {angulo}°", use_column_width=True)
+                        st.image(procesada[operacion], caption=f"Imagen Rotada a {angulo}°", use_column_width=True)  
   
                     elif operacion == "Redimensionar Imagen":  
                         escala = st.sidebar.slider("Selecciona el porcentaje de escalado", 10, 200, 100)  
@@ -89,12 +94,12 @@ if opcion == "Sí":
                     elif operacion == "Invertir Colores":  
                         procesada[operacion] = invertir_colores(image_cv)  
                         st.subheader("Imagen con Colores Invertidos")  
-                        st.image(procesada[operacion], caption="Imagen con Colores Invertidos", use_column_width=True) 
+                        st.image(procesada[operacion], caption="Imagen con Colores Invertidos", use_column_width=True)  
 
-            # Casilla de comentarios
+            # Casilla de comentarios  
             comentario = st.text_area("Por favor, cuando termines tu recorrido por la página dejanos saber tu opinión:")  
             if st.button("Enviar Comentario"):  
-                st.success("¡Gracias por tu comentario!")
+                st.success("¡Gracias por tu comentario!🫡")  
             
             # Opción para guardar la imagen procesada seleccionada  
             st.sidebar.subheader("Guardar Imagen Procesada")  
@@ -109,5 +114,5 @@ if opcion == "Sí":
                 else:  
                     st.sidebar.write("No se ha procesado ninguna imagen para guardar.")  
 
-elif opcion == "No":
+elif opcion == "No":  
     st.text("Lamentamos no poder ayudarte.😪")
