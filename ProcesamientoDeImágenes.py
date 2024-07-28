@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np  
 import cv2  
 
+
 # Funciones de procesamiento de imágenes  
 def escala_grises(image):  
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  
@@ -33,9 +34,15 @@ def invertir_colores(image):
 st.title("Bienvenido a esta página para procesar imágenes.🖼️")  
 
 # Breve descripción  
-st.write("En esta página podrás escoger una imagen de tu galeria y modificarla"
+st.write("En esta página podrás escoger una imagen de tu galería y modificarla"  
          " a tu gusto con las opciones que tenemos preparadas para ti😉.")  
 
+# Reiniciar valores en la sesión   
+if st.button("Reiniciar Página"):  
+    st.session_state.clear()  # Limpia los estados de la sesión  
+    st.experimental_rerun()  # Reinicia la aplicación  
+
+# Mostrar el estado actual del botón de reinicio  
 opcion = st.radio("¿Listo?", ("Nada", "Sí", "No"))  
 if opcion == "Sí":  
     nombre = st.text_input("¿Cómo te llamas?")  
@@ -51,7 +58,7 @@ if opcion == "Sí":
 
             # Obtener el formato de la imagen  
             formato = ima.type  
-            st.write(f"El formato de la imagen que has elegido es: {formato}")  
+            st.write(f"{nombre}, el formato de la imagen que has elegido es: {formato}")  
 
             # Convertir imagen a un formato que OpenCV puede procesar  
             image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)  
@@ -66,7 +73,7 @@ if opcion == "Sí":
             # Menú de operaciones  
             st.sidebar.subheader("Opciones de Procesamiento👌")  
             operaciones = ["Escala de Grises", "Detección de Bordes", "Rotar Imagen",   
-                        "Redimensionar Imagen", "Invertir Colores", "Guardar Imagen"]  
+                        "Redimensionar Imagen", "Invertir Colores"]  
             for operacion in operaciones:  
                 if st.sidebar.checkbox(operacion):  
                     if operacion == "Escala de Grises":  
@@ -97,22 +104,22 @@ if opcion == "Sí":
                         st.image(procesada[operacion], caption="Imagen con Colores Invertidos", use_column_width=True)  
 
             # Casilla de comentarios  
-            comentario = st.text_area("Por favor, cuando termines tu recorrido por la página dejanos saber tu opinión:")  
+            comentario = st.text_area("Por favor, cuando termines tu recorrido por la página déjanos saber tu opinión:")  
             if st.button("Enviar Comentario"):  
                 st.success("¡Gracias por tu comentario!🫡")  
             
-            # Opción para guardar la imagen procesada seleccionada  
+            # Opción para guardar la imagen procesada  
             st.sidebar.subheader("Guardar Imagen Procesada")  
-            guardar = st.sidebar.selectbox("Selecciona qué imagen guardar", list(procesada.keys()))  
-
-            if st.sidebar.button("Guardar Imagen"):  
-                if guardar in procesada:  
-                    imagen_guardada = Image.fromarray(procesada[guardar])  
-                    guardada = f"imagen_procesada_{guardar}.png"  
-                    imagen_guardada.save(guardada)  
-                    st.sidebar.write(f"Imagen guardada como {guardada}")  
-                else:  
-                    st.sidebar.write("No se ha procesado ninguna imagen para guardar.")  
+            if procesada:  # Solo habilitar si se ha procesado alguna imagen  
+                guardar = st.sidebar.selectbox("Selecciona qué imagen guardar", list(procesada.keys()))  
+                if st.sidebar.button("Guardar Imagen"):  
+                    if guardar:  
+                        imagen_guardada = Image.fromarray(procesada[guardar])  
+                        guardada = f"imagen_procesada_{guardar}.png"  
+                        imagen_guardada.save(guardada)  
+                        st.sidebar.write(f"Imagen guardada como {guardada}")  
+            else:  
+                st.sidebar.selectbox("Selecciona qué imagen guardar", ["Nada"])  # Indica que no hay procesados   
 
 elif opcion == "No":  
     st.text("Lamentamos no poder ayudarte.😪")
